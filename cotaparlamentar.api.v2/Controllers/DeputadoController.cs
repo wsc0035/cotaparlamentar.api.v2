@@ -40,5 +40,19 @@ namespace cotaparlamentar.api.v2.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet]
+        [Route("AtualizacaoDeputadosGet")]
+        public IActionResult AtualizacaoDeputadosGet(int idperfil)
+        {
+            try
+            {
+                return Ok(_deputadoService.BuscaTodosDeputadosSiteCompletoPorIdPerfil(new int[] {idperfil}));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

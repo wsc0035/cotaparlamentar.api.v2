@@ -9,6 +9,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<DeputadoService>();
+builder.Services.AddScoped<CotaParlamentarService>();
 builder.Services.AddScoped<PuppeterApi>();
 builder.Services.AddScoped<IntegrationService>();
 

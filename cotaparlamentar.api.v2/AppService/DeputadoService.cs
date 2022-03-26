@@ -80,7 +80,7 @@ namespace cotaparlamentar.api.v2.AppService
 
             return deputado;
         }
-        private List<Deputado> BuscarTodosDeputadoSiteAtual()
+        public List<Deputado> BuscarTodosDeputadoSiteAtual()
         {
             var url = "https://www.camara.leg.br/cota-parlamentar/index.jsp";
             var web = new HtmlWeb();
