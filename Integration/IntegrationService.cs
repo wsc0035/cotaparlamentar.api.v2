@@ -1,5 +1,6 @@
 ﻿using Integration.PuppeterInegration;
 using Microsoft.Extensions.Configuration;
+using System.Text.Json;
 
 namespace Integration
 {
@@ -19,6 +20,20 @@ namespace Integration
             var resultPuppeter = await _puppeterApi.ReturnJsonFromWeb(uri);
 
             return resultPuppeter;
+        }
+
+        public async Task<List<T>> BuscaPorUrlLista<T>(string url)
+        {
+            var ApiUrl = Environment.GetEnvironmentVariable("ApiUrl");
+            var uri = string.Concat(ApiUrl, url);
+
+            var client = await new HttpClient().GetAsync(uri);
+
+            var result = client.Content.ReadAsStringAsync().Result;
+
+            var jsonReturn = JsonSerializer.Deserialize<List<T>>(result);
+
+            return jsonReturn;
         }
     }
 }

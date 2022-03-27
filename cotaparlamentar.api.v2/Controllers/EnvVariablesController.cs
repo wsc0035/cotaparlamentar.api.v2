@@ -8,7 +8,7 @@ namespace cotaparlamentar.api.v2.Controllers
     public class EnvVariablesController : ControllerBase
     {
         [HttpGet]
-        public IActionResult Varaveis(string var)
+        public IActionResult Varaveis()
         {
             try
             {
