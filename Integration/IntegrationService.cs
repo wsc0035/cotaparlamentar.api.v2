@@ -16,7 +16,7 @@ namespace Integration
 
         public async Task<string> GetPuppeterResult(string url)
         {
-            var uri = string.Concat(_config.GetSection("ApiUrl").Value, url);
+            var uri = string.Concat(_config.GetSection("ApiUrl2").Value, url);
             var resultPuppeter = await _puppeterApi.ReturnJsonFromWeb(uri);
 
             return resultPuppeter;
