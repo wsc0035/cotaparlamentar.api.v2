@@ -12,7 +12,7 @@
 
             var root = builder.Build();        
             Legislatura = root.GetValue<string>("Legislatura").ToString();
-            UrlApi = root.GetValue<string>("ApiUrl").ToString();
+            UrlApi = root.GetValue<string>("ApiUrl2").ToString();
         }
     }
 }
