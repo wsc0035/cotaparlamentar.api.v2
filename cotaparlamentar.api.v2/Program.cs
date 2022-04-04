@@ -4,6 +4,12 @@ using Integration.PuppeterInegration;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.WebHost.UseKestrel(so =>
+{
+    so.Limits.RequestHeadersTimeout = TimeSpan.FromMinutes(3);
+    so.Limits.KeepAliveTimeout = TimeSpan.FromMinutes(3);
+});
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
