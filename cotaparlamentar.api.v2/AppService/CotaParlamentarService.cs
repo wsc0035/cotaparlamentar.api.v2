@@ -17,8 +17,8 @@ namespace cotaparlamentar.api.v2.AppService
         {
             var listaCota = new List<CotaParlamentar>();
             var deputados = _deputadoService.BuscarTodosDeputadoSiteAtual();
-
-            Parallel.ForEach(deputados, dep =>
+            var options =  new ParallelOptions { MaxDegreeOfParallelism = 8 };
+            Parallel.ForEach(deputados, options,  dep  =>
             {
                 listaCota.AddRange(ListaCotaParlamentarPorId(data, dep.NuDeputadoId));
             });

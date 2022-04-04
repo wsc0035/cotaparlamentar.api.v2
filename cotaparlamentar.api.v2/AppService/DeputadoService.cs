@@ -21,7 +21,9 @@ namespace cotaparlamentar.api.v2.AppService
         {
             var listaSite = new List<Deputado>();
 
-            Parallel.ForEach(idperfis, idperfil =>
+            var options = new ParallelOptions { MaxDegreeOfParallelism = 8 };
+
+            Parallel.ForEach(idperfis, options, idperfil =>
             {
                 listaSite.Add(BuscaDeputadoSiteAtualPorIdPerfil(idperfil));
             });
@@ -40,9 +42,10 @@ namespace cotaparlamentar.api.v2.AppService
             var deputadosSite = BuscarTodosDeputadoSiteAtual();
 
             var diff = deputadosSite.Where(p => !deputadosApi.Any(l => p.NuDeputadoId == l.nuDeputadoId)).ToList();
+            var options = new ParallelOptions { MaxDegreeOfParallelism = 8 };
 
-            Parallel.ForEach(diff, deputado => AtualizaIDPerfilDeputado(deputado));
-            Parallel.ForEach(diff, deputado => {
+            Parallel.ForEach(diff, options, deputado => AtualizaIDPerfilDeputado(deputado));
+            Parallel.ForEach(diff, options, deputado => {
                 var deputadoBusca = BuscaDeputadoSiteAtualPorIdPerfil(deputado.IdPerfil);
                 deputado.NomeCivil = deputadoBusca.NomeCivil;
                 deputado.EmExercicio = deputadoBusca.EmExercicio;
