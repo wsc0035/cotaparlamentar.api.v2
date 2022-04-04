@@ -34,10 +34,10 @@ namespace cotaparlamentar.api.v2.AppService
         {
             var listaDeputadoSite = new List<Deputado>();
 
-            //var jsonReturn = await _integrationService.GetPuppeterResult("");
-            //var deputadosApi = JsonSerializer.Deserialize<List<DeputadoViewModel>>(jsonReturn);           
+            var jsonReturn = await _integrationService.GetPuppeterResult("");
+            var deputadosApi = JsonSerializer.Deserialize<List<DeputadoViewModel>>(jsonReturn);           
 
-            var deputadosApi = await _integrationService.BuscaPorUrlLista<DeputadoViewModel>("");
+            //var deputadosApi = await _integrationService.BuscaPorUrlLista<DeputadoViewModel>("");
 
             var deputadosSite = BuscarTodosDeputadoSiteAtual();
 
