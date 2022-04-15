@@ -17,7 +17,7 @@
       "applicationUrl": "https://localhost:7099;http://localhost:5099",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "ApiUrl": "https://cotaparlamentaranodeexpressapi.herokuapp.com/?url=http://cotaparlamentar.rf.gd/api/public/deputado"
+        "ApiUrl": "http://www.cotaparlamentar.host/api/public/deputado"
       }
     },
     "IIS Express": {

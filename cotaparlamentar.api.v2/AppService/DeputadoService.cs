@@ -34,14 +34,14 @@ namespace cotaparlamentar.api.v2.AppService
         {
             var listaDeputadoSite = new List<Deputado>();
 
-            var jsonReturn = await _integrationService.GetPuppeterResult("");
-            var deputadosApi = JsonSerializer.Deserialize<List<DeputadoViewModel>>(jsonReturn);           
+            //var jsonReturn = await _integrationService.GetPuppeterResult("");
+            //var deputadosApi = JsonSerializer.Deserialize<List<DeputadoViewModel>>(jsonReturn);           
 
-            //var deputadosApi = await _integrationService.BuscaPorUrlLista<DeputadoViewModel>("");
+            var deputadosApi = await _integrationService.BuscaPorUrlLista<DeputadoViewModel>("");
 
             var deputadosSite = BuscarTodosDeputadoSiteAtual();
 
-            var diff = deputadosSite.Where(p => !deputadosApi.Any(l => p.NuDeputadoId == l.nuDeputadoId)).ToList();
+            var diff = deputadosSite.Where(p => !deputadosApi.Any(l => p.NuDeputadoId.ToString() == l.nuDeputadoId)).ToList();
             var options = new ParallelOptions { MaxDegreeOfParallelism = 8 };
 
             Parallel.ForEach(diff, options, deputado => AtualizaIDPerfilDeputado(deputado));
