@@ -15,11 +15,12 @@ namespace cotaparlamentar.api.v2.Controllers
 
         [HttpGet]
         [Route("BuscarTodosDeputadosNovos")]
-        public async Task<IActionResult> BuscaTodosDeputadoNovosSite()
+        public IActionResult BuscaTodosDeputadoNovosSite()
         {
             try
             {
-                return Ok(await _deputadoService.BuscaTodosDeputadoNovosSite());
+                _deputadoService.BuscaTodosDeputadoNovosSite();
+                return Ok();
             }
             catch (Exception ex)
             {
@@ -27,13 +28,14 @@ namespace cotaparlamentar.api.v2.Controllers
             }
         }
 
-        [HttpPost]
-        [Route("AtualizacaoDeputadosPost")]
-        public IActionResult AtualizacaoDeputadosPost(int[] idperfis)
+        [HttpGet]
+        [Route("AtualizacaoDeputados")]
+        public IActionResult AtualizacaoDeputados()
         {
             try
             {
-                return Ok(_deputadoService.BuscaTodosDeputadosSiteCompletoPorIdPerfil(idperfis));
+                _deputadoService.BuscaTodosDeputadosSiteCompletoPorIdPerfil();
+                return Ok();
             }
             catch (Exception ex)
             {
@@ -47,7 +49,7 @@ namespace cotaparlamentar.api.v2.Controllers
         {
             try
             {
-                return Ok(_deputadoService.BuscaTodosDeputadosSiteCompletoPorIdPerfil(new int[] {idperfil}));
+                return Ok();
             }
             catch (Exception ex)
             {
