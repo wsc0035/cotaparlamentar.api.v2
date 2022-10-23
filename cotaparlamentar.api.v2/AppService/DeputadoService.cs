@@ -11,8 +11,8 @@ public class DeputadoService
     private static readonly string _legislatura = ConfigAppSettings.Legislatura;
     private readonly MysqlDataContext _mysqlContext;
     public DeputadoService(MysqlDataContext mysqlContext)
-    {  
-        _mysqlContext = mysqlContext;   
+    {
+        _mysqlContext = mysqlContext;
     }
 
     public void BuscaTodosDeputadosSiteCompletoPorIdPerfil()
@@ -44,6 +44,23 @@ public class DeputadoService
         _mysqlContext.UpdateRange(listaBanco);
         _mysqlContext.SaveChanges();
     }
+    public void BuscaTodosDeputadosSiteCompletoPorIdPerfil(int idperfil)
+    {
+
+        var deputadoBanco = _mysqlContext.Deputado.Where(d => d.IdPerfil == idperfil).First();
+
+        var deputadoSite = BuscaDeputadoSiteAtualPorIdPerfil(idperfil);
+
+        deputadoBanco.Nome = deputadoSite.Nome;
+        deputadoBanco.NomeCivil = deputadoSite.NomeCivil;
+        deputadoBanco.Partido = deputadoSite.Partido;
+        deputadoBanco.Estado = deputadoSite.Estado;
+        deputadoBanco.EmExercicio = deputadoSite.EmExercicio;
+        deputadoBanco.DtAtualizacao = DateTime.Now;
+
+        _mysqlContext.Update(deputadoBanco);
+        _mysqlContext.SaveChanges();
+    }
     public void BuscaTodosDeputadoNovosSite()
     {
         var listaDeputadoSite = new List<Deputado>();
@@ -56,7 +73,8 @@ public class DeputadoService
         var options = new ParallelOptions { MaxDegreeOfParallelism = 8 };
 
         Parallel.ForEach(diff, options, deputado => AtualizaIDPerfilDeputado(deputado));
-        Parallel.ForEach(diff, options, deputado => {
+        Parallel.ForEach(diff, options, deputado =>
+        {
             var deputadoBusca = BuscaDeputadoSiteAtualPorIdPerfil(deputado.IdPerfil);
             deputado.NomeCivil = deputadoBusca.NomeCivil;
             deputado.EmExercicio = deputadoBusca.EmExercicio;
@@ -74,7 +92,7 @@ public class DeputadoService
             _mysqlContext.SaveChanges();
         }
     }
-    
+
     private Deputado BuscaDeputadoSiteAtualPorIdPerfil(int idperfil)
     {
         var url = $"https://www.camara.leg.br/deputados/{idperfil}";

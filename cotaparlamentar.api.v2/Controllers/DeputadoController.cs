@@ -44,11 +44,12 @@ namespace cotaparlamentar.api.v2.Controllers
         }
 
         [HttpGet]
-        [Route("AtualizacaoDeputadosGet")]
+        [Route("AtualizacaoDeputados/{idperfil:int}")]
         public IActionResult AtualizacaoDeputadosGet(int idperfil)
         {
             try
             {
+                _deputadoService.BuscaTodosDeputadosSiteCompletoPorIdPerfil(idperfil);
                 return Ok();
             }
             catch (Exception ex)
