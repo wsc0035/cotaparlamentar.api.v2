@@ -1,43 +1,42 @@
 ﻿using cotaparlamentar.api.v2.AppService;
 using Microsoft.AspNetCore.Mvc;
 
-namespace cotaparlamentar.api.v2.Controllers
+namespace cotaparlamentar.api.v2.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+public class CotaParlamentarController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class CotaParlamentarController : ControllerBase
+    private readonly CotaParlamentarService _cotaParlamentarService;
+    public CotaParlamentarController(CotaParlamentarService cotaParlamentarService)
     {
-        private readonly CotaParlamentarService _cotaParlamentarService;
-        public CotaParlamentarController(CotaParlamentarService cotaParlamentarService)
-        {
-            _cotaParlamentarService = cotaParlamentarService;
-        }
+        _cotaParlamentarService = cotaParlamentarService;
+    }
 
-        [HttpGet]
-        public IActionResult ObterCotaParlamentarPorData(string data)
+    [HttpGet]
+    public IActionResult ObterCotaParlamentarPorData(string data)
+    {
+        try
         {
-            try
-            {
-                return Ok(_cotaParlamentarService.BuscarCotaParlamentarPorData(data));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return Ok(_cotaParlamentarService.BuscarCotaParlamentarPorData(data));
         }
-
-        [HttpGet]
-        [Route("ObterCotaParlamentarPorDataId")]
-        public IActionResult ObterCotaParlamentarPorDataId(string data, int nuDeputadoId)
+        catch (Exception ex)
         {
-            try
-            {                
-                return Ok(_cotaParlamentarService.BuscarCotaParlamentarPorDataId(data, nuDeputadoId));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpGet]
+    [Route("ObterCotaParlamentarPorDataId")]
+    public IActionResult ObterCotaParlamentarPorDataId(string data, int nuDeputadoId)
+    {
+        try
+        {                
+            return Ok(_cotaParlamentarService.BuscarCotaParlamentarPorDataId(data, nuDeputadoId));
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
         }
     }
 }

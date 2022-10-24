@@ -1,6 +1,5 @@
 ﻿using cotaparlamentar.api.v2.Model;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 namespace cotaparlamentar.api.v2.Infraestructure.DataContext;
 

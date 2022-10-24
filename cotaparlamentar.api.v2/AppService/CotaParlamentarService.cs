@@ -39,9 +39,17 @@ public class CotaParlamentarService
         return LogReturn(listaCota, FormatData(data).ToString("yyyy-MM-dd"));
     }
 
-    public List<CotaParlamentar> BuscarCotaParlamentarPorDataId(string data, int id)
+    public string BuscarCotaParlamentarPorDataId(string data, int id)
     {
-        return ListaCotaParlamentarPorId(data, id);
+        _mysqlContext.Database.ExecuteSqlRaw("DELETE FROM tbcotaparlamentar WHERE data = {0} and nuDeputadoId = {1}", FormatData(data).ToString("yyyy-MM-dd"), id);
+        _mysqlContext.SaveChanges();
+
+        var cotaParlamentar = ListaCotaParlamentarPorId(data, id);
+
+        _mysqlContext.CotaParlamentar.AddRange(cotaParlamentar);
+        _mysqlContext.SaveChanges();
+
+        return LogReturn(cotaParlamentar, FormatData(data).ToString("yyyy-MM-dd"));
     }
     private List<CotaParlamentar> ListaCotaParlamentarPorId(string data, int nuDeputadoId)
     {
