@@ -1,5 +1,6 @@
 ﻿using cotaparlamentar.api.v2.AppService;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
 namespace cotaparlamentar.api.v2.Controllers
 {
@@ -24,6 +25,16 @@ namespace cotaparlamentar.api.v2.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        [HttpGet]
+        [Route("Atualizar")]
+        public string Atualizar()
+        {
+            var watch = Stopwatch.StartNew();
+            var retorno = _contextAccessor.AtualizarAssessor();
+            watch.Stop();
+            return $"{retorno} Tempo: {watch.ElapsedMilliseconds / 1000}s";
         }
     }
 }

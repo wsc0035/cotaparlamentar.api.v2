@@ -13,6 +13,7 @@ public class MysqlDataContext : DbContext
 
     public DbSet<Deputado> Deputado { get; set; }
     public DbSet<CotaParlamentar> CotaParlamentar { get; set; }
+    public DbSet<Assessor> Assessor { get; set; }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseMySql(_configuration,

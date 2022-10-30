@@ -1,12 +1,55 @@
-﻿using cotaparlamentar.api.v2.Model;
+﻿using cotaparlamentar.api.v2.Infraestructure.DataContext;
+using cotaparlamentar.api.v2.Model;
 using HtmlAgilityPack;
+using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.EntityFrameworkCore;
+using System.Globalization;
+using System.Text;
 
 namespace cotaparlamentar.api.v2.AppService
 {
     public class AssessorParlamentarService
     {
+        private readonly MysqlDataContext _mysqlContext;
+
+        public AssessorParlamentarService(MysqlDataContext mysqlContext)
+        {
+            _mysqlContext = mysqlContext;
+        }
+
+        public string AtualizarAssessor()
+        {
+            var contextDeputados = _mysqlContext.Deputado.Where(w => w.DtAtAssessor < DateTime.Now.AddDays(-20) || w.DtAtAssessor == null)
+                                                        .OrderBy(o => o.DtAtAssessor)
+                                                        .Select(s => new { s.NuDeputadoId, s.IdPerfil, s.Nome })
+                                                        .AsNoTracking()
+                                                        .Take(50)
+                                                        .ToList();
+
+            var listaAssessores = new List<Assessor>();
+
+            var listNuDeputadoId = contextDeputados.Select(s => s.NuDeputadoId).ToList();
+
+            Parallel.ForEach(contextDeputados, deputado =>
+            {
+                listaAssessores.AddRange(BuscarAssessorParlamentar(deputado.NuDeputadoId, deputado.IdPerfil));
+            });
+
+            var queryDelete = string.Format("DELETE FROM tbassessor WHERE nuDeputadoId IN ({0})", string.Join(",", listNuDeputadoId));
+            _mysqlContext.Database.ExecuteSqlRaw(queryDelete);
+            _mysqlContext.SaveChanges();
+
+            _mysqlContext.Assessor.AddRange(listaAssessores);
+            _mysqlContext.SaveChanges();
+
+            var queryUpdate = string.Format("UPDATE tbdeputados SET dtAtAssessor = NOW() WHERE nuDeputadoId IN ({0})", string.Join(",", listNuDeputadoId));
+            _mysqlContext.Database.ExecuteSqlRaw(queryUpdate);
+            _mysqlContext.SaveChanges();
+
+            return LogReturn(contextDeputados);
+        }
         public List<Assessor> BuscarAssessorParlamentar(int nuDeputadoId, int idperfil)
-        {            
+        {
             var listAssessor = new List<Assessor>();
 
             var web = new HtmlWeb();
@@ -24,9 +67,11 @@ namespace cotaparlamentar.api.v2.AppService
                     if (td != null)
                     {
                         var assessor = new Assessor();
+                        var data = DateTime.Now;
+                        DateTime.TryParse(td[3].InnerText.Substring(6), CultureInfo.CreateSpecificCulture("pt-BR"), DateTimeStyles.AdjustToUniversal, out data);
                         assessor.Nome = td[0].InnerText;
                         assessor.Cargo = td[1].InnerText;
-                        assessor.PeriodoExercicio = Convert.ToDateTime(td[3].InnerText.Substring(6), System.Globalization.CultureInfo.CreateSpecificCulture("pt-BR"));
+                        assessor.PeriodoExercicio = data;
                         assessor.LinkRemuneracao = td[4].SelectSingleNode("a").Attributes["href"].Value;
                         assessor.NuDeputadoId = nuDeputadoId;
 
@@ -76,6 +121,18 @@ namespace cotaparlamentar.api.v2.AppService
                     }
                 }
             });
+        }
+
+        private string LogReturn(IEnumerable<dynamic> list)
+        {
+            var builder = new StringBuilder();
+            builder.AppendLine("[ATUALIZACAO ASSESSOR]");
+            foreach (var item in list)
+            {
+                builder.AppendLine($"{item.NuDeputadoId} - {item.IdPerfil} : {item.Nome}");
+            }
+            builder.AppendLine("[ATUALIZACAO ASSESSOR]");
+            return builder.ToString();
         }
     }
 }
